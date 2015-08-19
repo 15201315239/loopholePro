@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee   
+        http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">  
+        <display-name></display-name>   
+          
+          
+        <!-- 核心控制器 -->  
+        <servlet>  
+            <servlet-name>springMvc</servlet-name>  
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>  
+            <init-param>  
+                <param-name>contextConfigLocation</param-name>  
+                <param-value>/WEB-INF/applicationContext.xml</param-value>  
+            </init-param>  
+            <load-on-startup>1</load-on-startup>  
+        </servlet>  
+         <context-param>  
+        	<param-name>webAppRootKey</param-name>   
+    	    <param-value>rootPath</param-value>  
+	    </context-param>
+        <listener>  
+            <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+        </listener>  
+            <!-- Spring的log4j监听器 -->  
+        <listener>  
+            <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>  
+        </listener>  
+        <servlet-mapping>  
+            <servlet-name>springMvc</servlet-name>  
+            <url-pattern>/</url-pattern>  
+        </servlet-mapping>  
+      <servlet>
+     <servlet-name>velocityView</servlet-name>
+     <servlet-class>org.apache.velocity.tools.view.servlet.VelocityViewServlet</servlet-class>
+  <init-param>
+     <param-name>org.apache.velocity.toolbox</param-name>
+     <param-value>/WEB-INF/toolbox.xml</param-value>
+  </init-param>
+  <!--
+  <init-param>
+   <param-name>org.apache.velocity.properties</param-name>
+   <param-value>/WEB-INF/velocity.properties</param-value>
+  </init-param>
+  -->
+  <load-on-startup>10</load-on-startup>
+ </servlet>
+ <servlet-mapping>
+     <servlet-name>velocityView</servlet-name>
+     <url-pattern>*.html</url-pattern>
+ </servlet-mapping>
+    </web-app>  

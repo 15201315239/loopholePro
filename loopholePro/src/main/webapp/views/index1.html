@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>漏洞爬取</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="/css/common.css" />
+<link rel="stylesheet" type="text/css" href="/css/jm_styleHt.css"/>
+<link rel="stylesheet" type="text/css" href="/css/jquery.datetimepicker.css">
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery.datetimepicker.js"></script>
+</head>
+
+<body style="background:#fff; overflow-y:auto" >
+Hello，$!name
+
+<div class="conrent clearfix">
+  <form  onsubmit="" id="myform" name="myform" action="" method="get" class="form-inline clearfix" style="border:none">
+    <h3 class="title_about" style="font-size:24px;">欢迎使用漏洞爬虫系统</h3>
+    
+    <div class="jms_div">
+		<p class="jms_pi">
+		<select id="select">
+			<option>请选择</option>
+			<option value="0">同时爬取</option>
+			<option value="1">爬取cnvd漏洞信息</option>
+			<option value="2">爬取cnnvd漏洞信息</option>
+		</select>
+		</p>
+		<p id="advice"></p>
+		<br>
+  <input id="button1" type="button" value="开始爬取"/>
+		
+	<p ><br>
+			<a href="">下载cnvd全部漏洞信息</a>
+		</p>
+		<br>
+		<p >
+			<a href="">下载cnnvd全部漏洞信息爬取</a>
+		</p>
+	 </div>
+  </form>
+  
+</div>
+  <div class="jms_div">
+	 导出指定时间内的cnvd漏洞信息：
+	<input id="some_class_1" class="some_class" type="text" value="">
+	<input id="some_class_2" class="some_class" type="text" value="">
+	<input id="button2" type="button" value="确认"> <br>
+	导出指定时间内的cnnvd漏洞信息：
+		<input id="some_class_3" class="some_class2" type="text" value="">
+		<input id="some_class_4" class="some_class2" type="text" value="">
+	<input id="button3" type="button" value="确认"/>
+	</div>
+<script type="text/javascript">
+	$('.some_class').datetimepicker();
+	$("#button1").click(function(){
+		if($("#select").val()==0){
+			return;
+		}else if($("#select").val()==1){
+			window.location.href="/spider/begincnvd";
+
+			$("#select").hide();
+			$("#button").hide();
+			$("#advice").html("正在爬取，请您耐心等待....");
+		}else if($("#select").val()==2){
+			
+/* 			$("#select").hide();
+			$("#button").hide();
+			$("#advice").html("正在爬取，请您耐心等待...."); */
+		}
+		
+		
+	})
+	
+	$("#button2").click(function(){
+		if(!$("#some_class_1").val()||!$("#some_class_2").val()){
+			if(window.confirm("您要下载全部吗？")){
+				window.location.href="/spider/download";
+			}
+		}else{
+			var a=$("#some_class_1").val().substring(0,10).replace(/\//g,"-");
+			var b=$("#some_class_2").val().substring(0,10).replace(/\//g,"-");
+			window.location.href="/spider/download?t1="+a+"&t2="+b;
+		}
+	})	
+	
+	
+</script>
+</body>
+</html>

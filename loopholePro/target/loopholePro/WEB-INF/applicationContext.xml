@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <beans xmlns="http://www.springframework.org/schema/beans"   
+           xmlns:aop="http://www.springframework.org/schema/aop"   
+           xmlns:context="http://www.springframework.org/schema/context"  
+           xmlns:mvc="http://www.springframework.org/schema/mvc"   
+           xmlns:tx="http://www.springframework.org/schema/tx"   
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+           xsi:schemaLocation="http://www.springframework.org/schema/aop   
+            http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
+            http://www.springframework.org/schema/beans   
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+            http://www.springframework.org/schema/context   
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+            http://www.springframework.org/schema/mvc   
+            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd   
+            http://www.springframework.org/schema/tx   
+            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">  
+        <mvc:annotation-driven /> 
+         <context:property-placeholder location="classpath:jdbc.properties" /> 
+        <context:component-scan base-package="com.me.*" />  
+         <tx:annotation-driven transaction-manager="transactionManager" />
+          <mvc:default-servlet-handler/>  
+          
+          
+          
+          <tx:annotation-driven transaction-manager="transactionManager" />
+ <!-- 拦截器方式配置事物 -->
+ <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+  <tx:attributes>
+   <tx:method name="save*" propagation="REQUIRED" />
+   <tx:method name="update*" propagation="REQUIRED" />
+   <tx:method name="insert*" propagation="REQUIRED" />
+   <tx:method name="delete*" propagation="REQUIRED" />
+   <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+   <tx:method name="select*" propagation="REQUIRED" read-only="true" />
+   <tx:method name="search*" propagation="REQUIRED" read-only="true" />
+   <tx:method name="datagrid*" propagation="REQUIRED"
+    read-only="true" />
+   <tx:method name="*" propagation="REQUIRED" />
+  </tx:attributes>
+ </tx:advice>
+ <aop:config>
+  <!--定义在service包和所有子包里的任意类的任意方法的执行  -->
+  <aop:pointcut id="transactionPointcut"
+   expression="execution(* com.meng.service..*Impl.*(..))" />
+  <aop:advisor pointcut-ref="transactionPointcut"
+   advice-ref="transactionAdvice" />
+ </aop:config>
+          
+          
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+            <property name="prefix" value="/src/main/webapp/" /> <!-- 可控路径 -->
+            <property name="suffix" value=".html" />  
+        </bean>  
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx --> 
+	    <bean id="transactionManager" 
+	        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+	        <property name="dataSource" ref="dataSource" />  
+	    </bean> 
+       <!-- sqlSessionFactory的datasource必须与上面transactionManager的datasource相同 -->
+	<bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+        <property name="mapperLocations" value="classpath*:com/me/mapper/**/*.xml" />
+    </bean> 
+    
+       <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <!-- Connection Info -->
+        <property name="driverClassName" value="${driverClassName}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${username}" />
+        <property name="password" value="${password}" />
+ 
+        <!-- Connection Pooling Info -->
+        <property name="maxActive" value="${maxActive}" />
+        <property name="maxIdle" value="${maxIdle}" />
+        <property name="defaultAutoCommit" value="false" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="3600000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="3600000" />
+    </bean>
+	   
+	   
+        <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        	<constructor-arg index="0" ref="mySqlSessionFactory" />
+    	</bean>
+	
+	    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+	        <property name="basePackage" value="com.me.dao" />
+	        <property name="sqlSessionFactoryBeanName" value="mySqlSessionFactory" />
+	    </bean>
+    
+    
+    
+       <bean id="velocityConfigurer"  
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">  
+        <property name="resourceLoaderPath" value="/views/" /><!-- 模板存放的路径 -->  
+        <property name="configLocation" value="/WEB-INF/velocity.properties" />  
+    </bean>  
+    </beans>  

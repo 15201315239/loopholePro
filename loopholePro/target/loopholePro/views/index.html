@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+#set( $treeList = ["pine", "oak", "maple", "redwood"])
+<table>
+<tr><td>Tree Name</td></tr>
+#foreach ($name in $treeList)
+<tr>
+ <td>
+     <b><font color="GREEN">$name</font></b> is a big tree!
+ </td>
+</tr>
+#end
+</table>
+</body>
+</html>
